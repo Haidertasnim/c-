@@ -4,92 +4,134 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lab_Assignment_1
+namespace Lab_Assignment_2
 {
-	public class Account
+	public abstract class Account
 	{
-		private static int accountNumber = 101;
-		private string accountName;
-		private double balance;
-		private Address address;
+		protected string name;
+		protected string dob;
+		protected string address;
+		protected double balance;
+		protected static int acNum = 101;
+		protected int accountNumber;
 
-		public static int AccNumber()
+		public Account() { }
+
+		public int AccNumber()
 		{
-			return accountNumber++;
+			accountNumber = acNum;
+			acNum++;
+			return accountNumber;
 		}
+		public Account(string name, double balance,string address, string dob)
+		{
+			this.name = name;
+			this.address = address;
+			this.dob = dob;
+			this.balance = balance;
+		}
+
+		public string Name
+		{
+			get
+			{
+				return name;
+			}
+			set
+			{
+				if (string.IsNullOrEmpty(value))
+				{
+					Console.WriteLine("Invalid Account Holder Name.");
+					return;
+				}
+				this.name = value;
+			}
+		}
+
 		public int AccountNumber
 		{
 			get
 			{
-				return AccNumber();
+				return accountNumber;
+			}
+			set
+			{
+				this.accountNumber = value;
 			}
 		}
-		public Account(string accountName, double balance, Address address)
-		{
-			this.accountName = accountName;
-			this.balance = balance;
-			this.address = address;
-		}
 
+		public double Balance
+		{
+			get
+			{
+				return balance;
+			}
+			set
+			{
+				this.balance = value;
+			}
+		}
+		public string Address
+		{
+			get
+			{
+				return address;
+			}
+			set
+			{
+				this.address = value;
+			}
+		}
+		public string DOB
+		{
+			get
+			{
+				return dob;
+			}
+			set
+			{
+				this.dob = value;
+			}
+		}
 		public void Deposit(double amount)
 		{
-			if (amount > 0)
-			{
-				Console.WriteLine("\nPrevious Balance was: " + balance);
-				Console.WriteLine(+amount + " $ Deposited...");
+			Console.WriteLine("\nPrevious Balance was : "+balance);
+			Console.WriteLine(+amount+ "$ Deposited...");
+		
+			balance = balance + amount;
 
-				balance = balance + amount;
+			Console.WriteLine("Current Balance is : " + balance);
+		}
+		public abstract void Withdraw(int amount);
 
-				Console.WriteLine("Current Balance is: " + balance);
-			}
-			else
-			{
-				Console.WriteLine("\nCan Not Deposit...");
-			}
-		}
-		public void Withdraw(double amount)
-		{
-			if (amount < 0)
-			{
-				Console.WriteLine("\nSorry, you can not withdraw a negative amount.");
-			}
-			else if (amount > balance)
-			{
-				Console.WriteLine("\nSorry, this withdrawal would exceed the balance");
-			}
-			else
-			{
-				this.balance = (this.balance - amount);
-				Console.WriteLine("\n" + amount + " $ Withdrawn...");
-				Console.WriteLine("\nAvailable Balance: " + balance);
-			}
-		}
-		public void Transfer(double amount,Account receiver)
+		public void Transfer(int amount,Account receiver)
 		{
 			if(amount<0)
 			{
-				Console.WriteLine("\nSorry, you can not transfer a negative amount.");
+				Console.WriteLine("\nAmount can not be negative");
 			}
 			else if(balance>=amount)
 			{
 				Withdraw(amount);
 				receiver.Deposit(amount);
-				Console.WriteLine("\n" + accountName + " has transfered " + amount + " taka to " + receiver.accountName + "'s account");
+				Console.WriteLine("\n" + name + " has transfered " + amount + " taka to " + receiver.name + "'s account");
 			}
 			else
 			{
 				Console.WriteLine("\nInsufficient Balance");
 			}
-			Console.WriteLine("\n" +accountName + "'s current balance is " +balance);
-			//Console.WriteLine(receiver.accountName + "'s current balance is " + receiver.balance);
+
+			Console.WriteLine("\n" + name + "'s current balance is " + balance);
+			Console.WriteLine(receiver.name + "'s current balance is " + receiver.balance);
 		}
 
-		public void ShowAccountInformation()
+		public virtual void Show_Info()
 		{
-			Console.WriteLine("\nAccount Holder Name: " + accountName);
+			Console.WriteLine("Account Holder Name: " + name);
 			Console.WriteLine("Account Number: " + AccNumber());
-			Console.WriteLine("Address: " + address.GetAddress());
 			Console.WriteLine("Available Balance: " + balance);
+			Console.WriteLine("Address: " + address);
+			Console.WriteLine("Date Of Birth: " + dob);
 		}
 	}
 }
